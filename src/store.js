@@ -11,20 +11,19 @@ const { Provider } = store;
 
 const StateProvider = ({ children }) => {
   const [state, dispatch] = useReducer((state, action) => {
-    console.log(action, state, state.theme.themeName);
-    switch (action.type) {
-      case "switchTheme":
-        const newState = {
-          ...state,
-          theme: state.theme.themeName === "light" ? themes.dark : themes.light
-        };
-        return newState;
-      default:
-        throw new Error();
+    const actions = {
+      switchTheme: {
+        ...state,
+        theme: state.theme.themeName === "light" ? themes.dark : themes.light
+      }
+    };
+
+    if (actions[action.type]) {
+      return actions[action.type];
     }
+    throw new Error();
   }, initialState);
 
-  console.log(state);
   return <Provider value={{ state, dispatch }}>{children}</Provider>;
 };
 
